@@ -1,0 +1,61 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Send Requests To Front Controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+
+    RewriteCond %{REQUEST_URI} /.env [NC]
+    RewriteRule ^ error/error.blade.php [L]
+
+    RewriteCond %{REQUEST_URI} /*.lock [NC]
+    RewriteRule ^ error/error.blade.php [L]
+
+   RewriteCond %{REQUEST_URI} /*.gitattributes [NC]
+   RewriteRule ^ error/error.blade.php [L]
+
+   RewriteCond %{REQUEST_URI} /*.json [NC]
+   RewriteRule ^ error/error.blade.php [L]
+
+   RewriteCond %{REQUEST_URI} /*.xml [NC]
+   RewriteRule ^ error/error.blade.php [L]
+
+   RewriteCond %{REQUEST_URI} /kernel.php [NC]
+   RewriteRule ^ error/error.blade.php [L]
+
+   #RewriteRule !^(public/|index\.php) [NC,F]
+
+    # block files which needs to be hidden // in here specify .example extension of the file
+    <Files ~ "\.(env|json|config.js|md|gitignore|gitattributes|lock|md)$">
+    Require all denied
+    </Files>
+
+    # in here specify full file name sperator '|'
+    <Files ~ "(artisan)$">
+    Require all denied
+    </Files>
+
+    <Files *.php>
+
+    </Files>
+
+    <Files index.php>
+    
+    </Files>
+
+    php_flag display_errors 1
+</IfModule>
